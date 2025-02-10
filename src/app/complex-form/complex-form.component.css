@@ -1,0 +1,41 @@
+.container {
+  width: 70%;
+  margin: auto;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+.row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+.unit-group {
+  padding: 15px;
+  border: 1px solid #ddd;
+  margin-bottom: 15px;
+}
+.unit-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.unit-row input {
+  width: 100%;
+}
+.remove-btn {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+}
+.remove-btn i {
+  font-size: 18px;
+}
+@media (max-width: 768px) {
+  .unit-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
