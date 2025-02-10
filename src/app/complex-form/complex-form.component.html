@@ -1,0 +1,107 @@
+<div class="container">
+  <h2>Reactive Form</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submitForm()">
+    <div class="form-group">
+      <label>Company Name *</label>
+      <input type="text" class="form-control" formControlName="companyName">
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label>Country *</label>
+        <input type="text" class="form-control" formControlName="country">
+      </div>
+      <div class="col-md-4">
+        <label>City *</label>
+        <input type="text" class="form-control" formControlName="city">
+      </div>
+      <div class="col-md-4">
+        <label>Zip *</label>
+        <input type="text" class="form-control" formControlName="zip">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Street *</label>
+      <input type="text" class="form-control" formControlName="street">
+    </div>
+
+    <h3>Units</h3>
+    <div formArrayName="unitGroups">
+      <div *ngFor="let group of unitGroups.controls; let i = index" [formGroupName]="i" class="unit-group">
+        <label>Group Name *</label>
+        <input type="text" class="form-control" formControlName="groupName">
+
+        <div formArrayName="units">
+          <div *ngFor="let unit of getUnits(i).controls; let j = index" [formGroupName]="j.toString()" class="unit-row d-flex align-items-center">
+            <div class="col-md-2">
+              <label>Unit Name *</label>
+              <input type="text" class="form-control" formControlName="unitName">
+            </div>
+            <div class="col-md-2">
+              <label>Quantity *</label>
+              <input type="number" class="form-control" formControlName="quantity" (input)="calculateTotal(i, j)">
+            </div>
+            <div class="col-md-2">
+              <label>Unit Price *</label>
+              <input type="number" class="form-control" formControlName="unitPrice" (input)="calculateTotal(i, j)">
+            </div>
+            <div class="col-md-2">
+              <label>Total Sum</label>
+              <input type="text" class="form-control" formControlName="totalSum" readonly>
+            </div>
+            <div class="col-md-2">
+              <button type="button" class="btn btn-danger remove-btn" (click)="removeUnit(i, j)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label><strong>Group Total</strong></label>
+          <input type="text" class="form-control" formControlName="groupTotal" readonly>
+        </div>
+
+        <button type="button" class="btn btn-primary" (click)="addUnit(i)">Add New Unit</button>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  <h3>Submitted Data</h3>
+  <table class="table table-bordered" *ngIf="submittedData.length > 0">
+    <thead>
+      <tr>
+        <th>Company Name</th>
+        <th>Country</th>
+        <th>City</th>
+        <th>Zip</th>
+        <th>Street</th>
+        <th>Unit Groups</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of submittedData">
+        <td>{{ data.companyName }}</td>
+        <td>{{ data.country }}</td>
+        <td>{{ data.city }}</td>
+        <td>{{ data.zip }}</td>
+        <td>{{ data.street }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let group of data.unitGroups">
+              <strong>{{ group.groupName }}</strong> (Total: {{ group.groupTotal }})
+              <ul>
+                <li *ngFor="let unit of group.units">
+                  {{ unit.unitName }} - Qty: {{ unit.quantity }} - Price: {{ unit.unitPrice }} - Total: {{ unit.totalSum }}
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
