@@ -1,103 +1,133 @@
-<div>
-  <h2>Reactive Form</h2>
-  
-  <form [formGroup]="form" (ngSubmit)="submitForm()">
-    <label>Company Name *</label>
-    <input type="text" formControlName="companyName" required>
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
-    <div style="display: flex; gap: 10px;">
-      <div style="flex: 1;">
-        <label>Country *</label>
-        <input type="text" formControlName="country" required>
-      </div>
-      <div style="flex: 1;">
-        <label>City *</label>
-        <input type="text" formControlName="city" required>
-      </div>
-    </div>
+@Component({
+  selector: 'app-complex-form',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './complex-form.component.html',
+  styleUrls: ['./complex-form.component.css']
+})
+export class ComplexFormComponent implements OnInit {
+  form!: FormGroup;
+  submittedData: any[] = [];
+  editingIndex: number | null = null;
 
-    <div style="display: flex; gap: 10px;">
-      <div style="flex: 1;">
-        <label>Zip *</label>
-        <input type="text" formControlName="zip" required>
-      </div>
-      <div style="flex: 1;">
-        <label>Street *</label>
-        <input type="text" formControlName="street" required>
-      </div>
-    </div>
+  constructor(private fb: FormBuilder) {}
 
-    <h3>Group Units</h3>
-    
-    <div formArrayName="unitGroups">
-      <div *ngFor="let group of unitGroups.controls; let i = index" class="unit-group" [formGroupName]="i">
-        <label>Group Name *</label>
-        <input type="text" formControlName="groupName" required>
+  ngOnInit() {
+   this.resetForm();
+  }
 
-        <table>
-          <thead>
-            <tr>
-              <th>Unit Name</th>
-              <th>Quantity</th>
-              <th>Unit Price</th>
-              <th>Total Sum</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody formArrayName="units">
-            <tr *ngFor="let unit of getUnits(i).controls; let j = index" [formGroupName]="j">
-              <td><input type="text" formControlName="unitName" required></td>
-              <td><input type="number" formControlName="quantity" (input)="calculateTotal(i, j)" required></td>
-              <td><input type="number" formControlName="unitPrice" (input)="calculateTotal(i, j)" required></td>
-              <td><input type="text" formControlName="totalSum" readonly></td>
-              <td><button type="button" (click)="deleteUnit(i, j)">Delete</button></td>
-            </tr>
-          </tbody>
-        </table>
+resetForm(){
+  this.form = this.fb.group({
+    companyName: [''],
+    country: [''],
+    city: [''],
+    zip: [''],
+    street: [''],
+    unitGroups: this.fb.array([]),
+  });
 
-        <label><b>Group Total:</b></label>
-        <input type="text" formControlName="groupTotal" readonly>
+   this.addUnitGroup();
+  }
+  get unitGroups(): FormArray {
+    return this.form.get('unitGroups') as FormArray;
+  }
+  getUnits(groupIndex: number): FormArray {
+    return this.unitGroups.at(groupIndex).get('units') as FormArray;
+  }
 
-        <button type="button" (click)="addUnit(i)">Add New Unit</button>
-      </div>
-    </div>
+  addUnitGroup() {
+    const unitGroup = this.fb.group({
+      groupName: [''],
+      units: this.fb.array([]),
+      groupTotal: [0],
+    });
 
-    <button type="submit">Submit</button>
-  </form>
-  
-  <h3>Submitted Data</h3>
-  <table *ngIf="submittedData.length > 0">
-    <thead>
-      <tr>
-        <th>Company Name</th>
-        <th>Country</th>
-        <th>City</th>
-        <th>Zip</th>
-        <th>Street</th>
-        <th>Group Name</th>
-        <th>Units</th>
-        <th>Group Total</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of submittedData; let idx = index">
-        <td>{{ data.companyName }}</td>
-        <td>{{ data.country }}</td>
-        <td>{{ data.city }}</td>
-        <td>{{ data.zip }}</td>
-        <td>{{ data.street }}</td>
-        <td>{{ data.unitGroups[0]?.groupName }}</td>
-        <td>
-          <ul>
-            <li *ngFor="let unit of data.unitGroups[0]?.units">
-              {{ unit.unitName }} - Qty: {{ unit.quantity }} - Price: {{ unit.unitPrice }} - Total: {{ unit.totalSum }}
-            </li>
-          </ul>
-        </td>
-        <td>{{ data.unitGroups[0]?.groupTotal }}</td>
-        <td><button (click)="editForm(idx)">Edit</button></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+    this.unitGroups.push(unitGroup);
+    this.addUnit(this.unitGroups.length - 1);
+  }
+
+  addUnit(groupIndex: number) {
+    const unit = this.fb.group({
+      unitName: [''],
+      quantity: [1],
+      unitPrice: [0],
+      totalSum: [0],
+    });
+
+    this.getUnits(groupIndex).push(unit);
+  }
+
+  deleteUnit(groupIndex: number, unitIndex: number) {
+    this.getUnits(groupIndex).removeAt(unitIndex);
+    this.updateGroupTotal(groupIndex);
+  }
+
+  calculateTotal(groupIndex: number, unitIndex: number) {
+    const unit = this.getUnits(groupIndex).at(unitIndex);
+    const quantity = unit.get('quantity')?.value || 0;
+    const unitPrice = unit.get('unitPrice')?.value || 0;
+    const totalSum = quantity * unitPrice;
+    unit.patchValue({ totalSum });
+
+    this.updateGroupTotal(groupIndex);
+  }
+
+  updateGroupTotal(groupIndex: number) {
+    let groupTotal = 0;
+    this.getUnits(groupIndex).controls.forEach((unit) => {
+      groupTotal += unit.get('totalSum')?.value || 0;
+    });
+
+    this.unitGroups.at(groupIndex).patchValue({ groupTotal });
+  }
+
+  submitForm() {
+    if (this.form.valid) {
+      if (this.editingIndex !== null) {
+
+        this.submittedData[this.editingIndex] = { ...this.form.value };
+        this.editingIndex = null;
+      } else {
+
+        this.submittedData.push({ ...this.form.value });
+      }
+      console.log('Submitted Data:', this.form.value);
+      alert('Form Submitted Successfully!');
+      this.resetForm();
+    }
+  }
+
+  editForm(index: number) {
+    this.editingIndex = index;
+    const selectedData = this.submittedData[index];
+
+    this.form.reset();
+    this.form.patchValue(selectedData);
+
+    this.unitGroups.clear();
+    selectedData.unitGroups.forEach((group: any) => {
+      const groupForm = this.fb.group({
+        groupName: [group.groupName],
+        units: this.fb.array([]),
+        groupTotal: [group.groupTotal]
+      });
+
+      group.units.forEach((unit: any) => {
+        const unitForm = this.fb.group({
+          unitName: [unit.unitName],
+          quantity: [unit.quantity],
+          unitPrice: [unit.unitPrice],
+          totalSum: [unit.totalSum]
+        });
+
+        (groupForm.get('units') as FormArray).push(unitForm);
+      });
+
+      this.unitGroups.push(groupForm);
+    });
+  }
+}
