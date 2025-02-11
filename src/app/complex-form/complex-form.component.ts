@@ -12,26 +12,29 @@ import { CommonModule } from '@angular/common';
 export class ComplexFormComponent implements OnInit {
   form!: FormGroup;
   submittedData: any[] = [];
+  editingIndex: number | null = null;
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
-    this.form = this.fb.group({
-      companyName: [''],
-      country: [''],
-      city: [''],
-      zip: [''],
-      street: [''],
-      unitGroups: this.fb.array([]),
-    });
-
-    this.addUnitGroup();
+   this.resetForm();
   }
 
+resetForm(){
+  this.form = this.fb.group({
+    companyName: [''],
+    country: [''],
+    city: [''],
+    zip: [''],
+    street: [''],
+    unitGroups: this.fb.array([]),
+  });
+
+   this.addUnitGroup();
+  }
   get unitGroups(): FormArray {
     return this.form.get('unitGroups') as FormArray;
   }
-
   getUnits(groupIndex: number): FormArray {
     return this.unitGroups.at(groupIndex).get('units') as FormArray;
   }
@@ -58,13 +61,17 @@ export class ComplexFormComponent implements OnInit {
     this.getUnits(groupIndex).push(unit);
   }
 
+  deleteUnit(groupIndex: number, unitIndex: number) {
+    this.getUnits(groupIndex).removeAt(unitIndex);
+    this.updateGroupTotal(groupIndex);
+  }
+
   calculateTotal(groupIndex: number, unitIndex: number) {
     const unit = this.getUnits(groupIndex).at(unitIndex);
     const quantity = unit.get('quantity')?.value || 0;
     const unitPrice = unit.get('unitPrice')?.value || 0;
     const totalSum = quantity * unitPrice;
     unit.patchValue({ totalSum });
-
 
     this.updateGroupTotal(groupIndex);
   }
@@ -78,16 +85,49 @@ export class ComplexFormComponent implements OnInit {
     this.unitGroups.at(groupIndex).patchValue({ groupTotal });
   }
 
-  removeUnit(groupIndex: number, unitIndex: number) {
-    this.getUnits(groupIndex).removeAt(unitIndex);
-    this.updateGroupTotal(groupIndex);
-  }
-
   submitForm() {
     if (this.form.valid) {
-      this.submittedData.push(this.form.value);
+      if (this.editingIndex !== null) {
+
+        this.submittedData[this.editingIndex] = { ...this.form.value };
+        this.editingIndex = null;
+      } else {
+
+        this.submittedData.push({ ...this.form.value });
+      }
       console.log('Submitted Data:', this.form.value);
       alert('Form Submitted Successfully!');
+      this.resetForm();
     }
+  }
+
+  editForm(index: number) {
+    this.editingIndex = index;
+    const selectedData = this.submittedData[index];
+
+    this.form.reset();
+    this.form.patchValue(selectedData);
+
+    this.unitGroups.clear();
+    selectedData.unitGroups.forEach((group: any) => {
+      const groupForm = this.fb.group({
+        groupName: [group.groupName],
+        units: this.fb.array([]),
+        groupTotal: [group.groupTotal]
+      });
+
+      group.units.forEach((unit: any) => {
+        const unitForm = this.fb.group({
+          unitName: [unit.unitName],
+          quantity: [unit.quantity],
+          unitPrice: [unit.unitPrice],
+          totalSum: [unit.totalSum]
+        });
+
+        (groupForm.get('units') as FormArray).push(unitForm);
+      });
+
+      this.unitGroups.push(groupForm);
+    });
   }
 }
