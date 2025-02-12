@@ -1,0 +1,122 @@
+/* Basic styles */
+p {
+  font-size: 20px;          /* Optional: Adjust the font size */
+  text-align: center;       /* Ensures text is centered inside the <p> element */
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Container for the table */
+.container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+td {
+  background-color: #fff;
+}
+
+/* Button styling */
+button {
+  padding: 8px 12px;
+  margin: 5px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* Edit and delete buttons with different colors */
+button:nth-child(1) {
+  background-color: #2196F3;
+}
+
+button:nth-child(2) {
+  background-color: #f44336;
+}
+
+button:nth-child(1):hover {
+  background-color: #0b7dda;
+}
+
+button:nth-child(2):hover {
+  background-color: #d32f2f;
+}
+
+/* List styling inside the table */
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+li::before {
+  content: "• ";
+  color: #4CAF50;
+}
+
+/* Styling for the 'Clear All Data' button */
+button.clear-all {
+  background-color: #ff5722;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+button.clear-all:hover {
+  background-color: #e64a19;
+}
+
+/* Center the 'Clear All Data' button */
+.clear-all-container {
+  display: flex;
+  justify-content: center; /* Horizontally center the button */
+  margin-top: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  table {
+    width: 100%;
+  }
+  th, td {
+    font-size: 12px;
+    padding: 8px;
+  }
+}

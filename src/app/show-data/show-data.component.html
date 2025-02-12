@@ -1,0 +1,44 @@
+<p >show-data works!</p>
+<div class="clear-all-container">
+  <button class="clear-all">Clear All Data</button>
+</div>
+
+<div class="container">
+    <table border="1">
+      <tr>
+        <th>Company</th>
+        <th>Country</th>
+        <th>State</th>
+        <th>Street</th>
+        <th>City</th>
+        <th>Units</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+      <tr *ngFor="let data of data; let i = index">
+        <td>{{data.companyName}}</td>
+        <td>{{data.country}}</td>
+        <td>{{data.state}}</td>
+        <td>{{data.street}}</td>
+        <td>{{data.city}}</td>
+        <td>
+          
+          <div *ngFor="let item of data.units">
+            
+          <td> 
+            <ul>
+            <li>UnitName:{{item.unitName}}</li>
+            <li>UnitPrice:{{item.unitPrice}}</li>
+            <li>UnitQuantity{{item.unitQuantity}}</li>
+            <li>TotalPrice{{item.unitPrice*item.unitQuantity}}</li>
+          </ul> 
+        </td>
+           
+          </div>
+        </td>
+        <td><button (click)="editTable(i)">Edit</button></td>
+        <td><button (click)="deleteData(i)">Delete</button></td>
+      </tr>
+    </table>
+  </div>
+  

@@ -1,77 +1,72 @@
-<div class="container">
+ <div>
   <h2>Reactive Form</h2>
-
+  
   <form [formGroup]="form" (ngSubmit)="submitForm()">
-    <div class="form-group">
-      <label>Company Name *</label>
-      <input type="text" class="form-control" formControlName="companyName">
-    </div>
+    <label>Company Name *</label>
+    <input type="text" formControlName="companyName" required>
 
-    <div class="row">
-      <div class="col-md-4">
+    <div style="display: flex; gap: 10px;">
+      <div style="flex: 1;">
         <label>Country *</label>
-        <input type="text" class="form-control" formControlName="country">
+        <input type="text" formControlName="country" required>
       </div>
-      <div class="col-md-4">
+      <div style="flex: 1;">
         <label>City *</label>
-        <input type="text" class="form-control" formControlName="city">
+        <input type="text" formControlName="city" required>
       </div>
-      <div class="col-md-4">
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <div style="flex: 1;">
         <label>Zip *</label>
-        <input type="text" class="form-control" formControlName="zip">
+        <input type="text" formControlName="zip" required>
+      </div>
+      <div style="flex: 1;">
+        <label>Street *</label>
+        <input type="text" formControlName="street" required>
       </div>
     </div>
 
-    <div class="form-group">
-      <label>Street *</label>
-      <input type="text" class="form-control" formControlName="street">
-    </div>
-
-    <h3>Units</h3>
+    <h3>Group Units</h3>
+    
     <div formArrayName="unitGroups">
-      <div *ngFor="let group of unitGroups.controls; let i = index" [formGroupName]="i" class="unit-group">
+      <div *ngFor="let group of unitGroups.controls; let i = index" class="unit-group" [formGroupName]="i">
         <label>Group Name *</label>
-        <input type="text" class="form-control" formControlName="groupName">
+        <input type="text" formControlName="groupName" required>
 
-        <div formArrayName="units">
-          <div *ngFor="let unit of getUnits(i).controls; let j = index" [formGroupName]="j.toString()" class="unit-row d-flex align-items-center">
-            <div class="col-md-2">
-              <label>Unit Name *</label>
-              <input type="text" class="form-control" formControlName="unitName">
-            </div>
-            <div class="col-md-2">
-              <label>Quantity *</label>
-              <input type="number" class="form-control" formControlName="quantity" (input)="calculateTotal(i, j)">
-            </div>
-            <div class="col-md-2">
-              <label>Unit Price *</label>
-              <input type="number" class="form-control" formControlName="unitPrice" (input)="calculateTotal(i, j)">
-            </div>
-            <div class="col-md-2">
-              <label>Total Sum</label>
-              <input type="text" class="form-control" formControlName="totalSum" readonly>
-            </div>
-            <div class="col-md-2">
-              <button type="button" class="btn btn-danger remove-btn" (click)="removeUnit(i, j)">
-                <i class="fa fa-trash"></i>
-              </button>
-            </div>
-          </div>
-        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Unit Name</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
+              <th>Total Sum</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="units">
+            <tr *ngFor="let unit of getUnits(i).controls; let j = index" [formGroupName]="j">
+              <td><input type="text" formControlName="unitName" required></td>
+              <td><input type="number" formControlName="quantity" (input)="calculateTotal(i, j)" required></td>
+              <td><input type="number" formControlName="unitPrice" (input)="calculateTotal(i, j)" required></td>
+              <td><input type="text" formControlName="totalSum" readonly></td>
+              <td><button type="button" (click)="deleteUnit(i, j)">Delete</button></td>
+            </tr>
+          </tbody>
+        </table>
 
-        <div class="form-group">
-          <label><strong>Group Total</strong></label>
-          <input type="text" class="form-control" formControlName="groupTotal" readonly>
-        </div>
+        <label><b>Group Total:</b></label>
+        <input type="text" formControlName="groupTotal" readonly>
 
-        <button type="button" class="btn btn-primary" (click)="addUnit(i)">Add New Unit</button>
+        <button type="button" (click)="addUnit(i)">Add New Unit</button>
       </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit">Submit</button>
   </form>
+
   <h3>Submitted Data</h3>
-  <table class="table table-bordered" *ngIf="submittedData.length > 0">
+  <table *ngIf="submittedData.length > 0">
     <thead>
       <tr>
         <th>Company Name</th>
@@ -79,29 +74,30 @@
         <th>City</th>
         <th>Zip</th>
         <th>Street</th>
-        <th>Unit Groups</th>
+        <th>Group Name</th>
+        <th>Units</th>
+        <th>Group Total</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of submittedData">
+      <tr *ngFor="let data of submittedData; let idx = index">
         <td>{{ data.companyName }}</td>
         <td>{{ data.country }}</td>
         <td>{{ data.city }}</td>
         <td>{{ data.zip }}</td>
         <td>{{ data.street }}</td>
+        <td>{{ data.unitGroups[0]?.groupName }}</td>
         <td>
           <ul>
-            <li *ngFor="let group of data.unitGroups">
-              <strong>{{ group.groupName }}</strong> (Total: {{ group.groupTotal }})
-              <ul>
-                <li *ngFor="let unit of group.units">
-                  {{ unit.unitName }} - Qty: {{ unit.quantity }} - Price: {{ unit.unitPrice }} - Total: {{ unit.totalSum }}
-                </li>
-              </ul>
+            <li *ngFor="let unit of data.unitGroups[0]?.units">
+              {{ unit.unitName }} - Qty: {{ unit.quantity }} - Price: {{ unit.unitPrice }} - Total: {{ unit.totalSum }}
             </li>
           </ul>
         </td>
+        <td>{{ data.unitGroups[0]?.groupTotal }}</td>
+        <td><button (click)="editForm(idx)">Edit</button></td>
       </tr>
     </tbody>
   </table>
-</div>
+</div> 

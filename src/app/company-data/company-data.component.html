@@ -1,0 +1,87 @@
+<p>company-data works!</p>
+<div class="boss">
+    <form [formGroup]="unitForm" (ngSubmit)="onSubmit()">
+        <h1>Reactive Form</h1>
+        <div class="employee">
+        <div>
+          <label>Company name*</label><br>
+          <input formControlName="companyName">
+          <div>
+            @if (unitForm.controls['companyName'].errors?.['required'] && unitForm.controls['companyName'].touched) {
+              <span>Company Name is required</span>
+            }
+          </div>
+        </div>
+        <div>
+          <label>Country</label><br>
+          <input formControlName="country">
+          <div>
+            @if (unitForm.controls['country'].errors?.['required'] && unitForm.controls['country'].touched) {
+              <span>Country Name is required</span>
+            }
+          </div>
+          
+        </div>
+    </div>
+    <div class="worker">
+        <div>
+          <label>Street</label><br>
+          <input formControlName="street">
+          <div>
+            @if (unitForm.controls['street'].errors?.['required'] && unitForm.controls['street'].touched) {
+              <span>street field is required</span>
+            }
+          </div>
+          
+        </div>
+        <div>
+          <label>City</label><br>
+          <input formControlName="city">
+          <div>
+            @if (unitForm.controls['city'].errors?.['required'] && unitForm.controls['city'].touched) {
+              <span>City field should not empty</span>
+            }
+          </div>
+        </div>
+        <div>
+          <label>State</label><br>
+          <input formControlName="state">
+          <div>
+            @if (unitForm.controls['state'].errors?.['required'] && unitForm.controls['state'].touched) {
+              <span>state Name is required</span>
+            }
+          </div>
+        </div>
+    </div>
+    
+        <div class="unit">
+            <h2>Units</h2>
+       
+        <div class="main-units" formArrayName="units">
+            <div *ngFor="let unit of units.controls; let i = index" [formGroupName]="i" class="unit-sub">
+              <div>
+                <label>Unit name*</label><br>
+                <input formControlName="unitName">
+              </div>
+              <div>
+                <label>Quantity*</label><br>
+                <input type="number" formControlName="unitQuantity">
+              </div>
+              <div>
+                <label>Unit price*</label><br>
+                <input type="number" formControlName="unitPrice">
+              </div>
+                <div>
+                    <label>Total price</label><br>
+                    <input type="number" formControlName="totalPrice" value="{{ unit.value.unitQuantity * unit.value.unitPrice }}" [readOnly]="true">
+              <button type="button" (click)="removeUnit(i)">Remove</button>
+            </div>
+          </div>
+    
+        <button type="button" (click)="addUnit()">+ Add new unit</button>
+    
+    </div>
+    
+        <button type="submit">Submit</button>
+    </div>
+      </form>

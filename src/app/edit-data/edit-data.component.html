@@ -1,0 +1,65 @@
+<p>edit-data works!</p>
+
+
+<div class="boss">
+    <form [formGroup]="unitForm" (ngSubmit)="updateData()">
+        <h1>Reactive Form</h1>
+        <div class="employee">
+        <div>
+          <label>Company name*</label><br>
+          <input formControlName="companyName">
+          <div *ngIf="unitForm.get('companyName')?.invalid && (unitForm.get('companyName')?.dirty || unitForm.get('companyName')?.touched)">
+            <div *ngIf="unitForm.get('companyName')?.errors?.['required']">Company name is required</div>
+          </div>
+        </div>
+        <div>
+          <label>Country</label><br>
+          <input formControlName="country">
+        </div>
+    </div>
+    <div class="employee">
+        <div>
+          <label>Street</label><br>
+          <input formControlName="street">
+        </div>
+        <div>
+          <label>City</label><br>
+          <input formControlName="city">
+        </div>
+        <div>
+          <label>State</label><br>
+          <input formControlName="state">
+        </div>
+    </div>
+    
+        <div class="unit">
+            <h2>Units</h2>
+       
+        <div class="main-units" formArrayName="units">
+            <div *ngFor="let unit of units.controls; let i = index" [formGroupName]="i" class="unit-sub">
+              <div>
+                <label>Unit name*</label><br>
+                <input formControlName="unitName">
+              </div>
+              <div>
+                <label>Quantity*</label><br>
+                <input type="number" formControlName="unitQuantity">
+              </div>
+              <div>
+                <label>Unit price*</label><br>
+                <input type="number" formControlName="unitPrice">
+              </div>
+                <div>
+                    <label>Total price</label><br>
+                    <input type="number" formControlName="totalPrice" value="{{ unit.value.unitQuantity * unit.value.unitPrice }}" [readOnly]="true">
+              <button type="button" (click)="removeUnit(i)">Remove</button>
+            </div>
+          </div>
+    
+        <button type="button" (click)="addUnit()">+ Add new unit</button>
+    
+    </div>
+    
+        <button type="submit">Update</button>
+    </div>
+      </form>
