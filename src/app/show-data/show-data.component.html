@@ -1,44 +1,48 @@
-<p >show-data works!</p>
+<p>show Data works!</p>
+
 <div class="clear-all-container">
-  <button class="clear-all">Clear All Data</button>
+  <button (click)="currentEntity()" class="clear-all">All Data</button>
 </div>
 
-<div class="container">
-    <table border="1">
-      <tr>
-        <th>Company</th>
-        <th>Country</th>
-        <th>State</th>
-        <th>Street</th>
-        <th>City</th>
-        <th>Units</th>
-        <th>Edit</th>
-        <th>Delete</th>
-      </tr>
-      <tr *ngFor="let data of data; let i = index">
-        <td>{{data.companyName}}</td>
-        <td>{{data.country}}</td>
-        <td>{{data.state}}</td>
-        <td>{{data.street}}</td>
-        <td>{{data.city}}</td>
-        <td>
-          
-          <div *ngFor="let item of data.units">
-            
-          <td> 
-            <ul>
-            <li>UnitName:{{item.unitName}}</li>
-            <li>UnitPrice:{{item.unitPrice}}</li>
-            <li>UnitQuantity{{item.unitQuantity}}</li>
-            <li>TotalPrice{{item.unitPrice*item.unitQuantity}}</li>
-          </ul> 
-        </td>
-           
-          </div>
-        </td>
-        <td><button (click)="editTable(i)">Edit</button></td>
-        <td><button (click)="deleteData(i)">Delete</button></td>
-      </tr>
-    </table>
-  </div>
-  
+<table border="1">
+  <tr>
+    <th>Company</th>
+    <th>Country</th>
+    <th>State</th>
+    <th>Street</th>
+    <th>City</th>
+    <th>Units</th>
+    <th>Edit</th>
+    <th>Delete</th>
+  </tr>
+  <tr *ngFor="let data of userData">
+    <td>{{ data.company_name }}</td>
+    <td>{{ data.country }}</td>
+    <td>{{ data.state }}</td>
+    <td>{{ data.street }}</td>
+    <td>{{ data.city }}</td>
+    <td>
+      <ul *ngIf="data.units && data.units.length > 0">
+        <ul *ngFor="let unit of data.units">
+          <li> {{unit.unit_name}} </li>
+          <li> {{unit.unit_quantity}} </li>
+          <li> {{unit.unit_price}} </li>
+        </ul>
+        <!-- <li *ngFor="let unit of data.units">
+          {{ unit.unit_name }} ({{ unit.unit_quantity }} x {{ unit.unit_price }})
+        </li> -->
+      </ul>
+      <span *ngIf="!data.units || data.units.length === 0">No Units</span>
+
+    </td>
+
+    <td>
+      <button (click)="editCompany(data.id)">Edit</button>
+    </td>
+    
+    <td>
+      <button (click)="deleteCompany(data.id)">Delete</button>
+    </td>
+    
+  </tr>
+</table>

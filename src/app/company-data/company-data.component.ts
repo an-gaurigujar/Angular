@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormArray, } from '@angular/forms';
+import { ApiService } from '../services/api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-comapny-data',
@@ -11,9 +13,9 @@ import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormArray, } f
 export class CompanyDataComponent {
 
  unitForm: FormGroup;
-  allData: any = [];
+ currentEntity: any = [];
   currentIndex = null;
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private Service:ApiService,private router:Router) {
     this.unitForm = this.fb.group({
       companyName: ['', Validators.required],
       country: ['',Validators.required],
@@ -32,54 +34,40 @@ export class CompanyDataComponent {
 
   addUnit(unit?: any) {
     const unitGroup = this.fb.group({
-      unitName: [unit ? unit.unitName: '', Validators.required],
-      unitQuantity: [unit? unit.unitQuantity : 1, Validators.required],
-      unitPrice: [unit ? unit.unitPrice: 0, Validators.required],
-      totalPrice:[unit ? unit.unitQuantity * unit.unitPrice : 0],
+      unitName: [ '', Validators.required],
+      unitQuantity: [ 1, Validators.required],
+      unitPrice: [0, Validators.required],
+      totalPrice:[ 0],
     });
 
 
     this.units.push(unitGroup);
   }
 
-  
-  onSubmit() {
+   async onSubmit() {
 
-    if (this.currentIndex !== null) {
+     console.log(this.unitForm.value);
 
-
-      // this.updateStorageData();
-
-
-      return;
+    // let userData :any=[];
+    // userData.push(this.unitForm.value);
+   await this.Service.insertCompany(this.unitForm.value).subscribe(data => {
+      // this.currentEntity=userData;
+      // console.log(data);
     }
-    // console.log(this.unitForm.value);
-    // this.alldata.push(this.unitForm.value);
-
-    let data: any = [];
-    const allData = localStorage.getItem('data');
-
-    if (allData) {
-      data = JSON.parse(allData);
-    } 
-
-    data.push(this.unitForm.value);
-    localStorage.setItem('data', JSON.stringify(data));
-
-    this.allData = data;
-    this.resetForm()
-        // this.addUnit(); // Add a new unit by default on form reset
+    ) 
+    this.resetForm();
 
   }
-
+  
   resetForm() {
-    // Reset the form
+
     this.unitForm.reset();
     this.units.clear();
-    // console.log(this.alldata)
+
     this.addUnit();
   }
   removeUnit(index: number) {
     this.units.removeAt(index);
   }
 }
+

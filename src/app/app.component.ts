@@ -1,17 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { UserFormComponent } from "./user-form/user-form.component";
-import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ComplexFormComponent } from './complex-form/complex-form.component';
-import { CompanyDataComponent } from './company-data/company-data.component';
+import { RouterOutlet, RouterLink } from '@angular/router';
+import { EditDataComponent } from './edit-data/edit-data.component';
 
 @Component({
   selector: 'app-root',
-  imports: [ CompanyDataComponent,CommonModule,ComplexFormComponent,RouterOutlet,RouterLink,RouterLinkActive],
+  standalone: true,
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
+  imports: [RouterOutlet, RouterLink,],
 })
 export class AppComponent {
-  title = 'Reactiveform';
+  title = 'Angular App';
 }

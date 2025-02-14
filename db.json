@@ -1,0 +1,56 @@
+{
+  "user": [
+    {
+      "id": "1",
+      "name": "Gauri",
+      "email": "gauri@gmail.com"
+    },
+    {
+      "id": "bbfc",
+      "name": "John Doe",
+      "email": "johndoe@example.com"
+    },
+    {
+      "id": "5158",
+      "name": "John Doe",
+      "email": "johndoe@example.com"
+    },
+    {
+      "id": "af5b",
+      "name": "John Doe",
+      "email": "johndoe@example.com"
+    },
+    {
+      "id": "1de1",
+      "name": "John Doe",
+      "email": "johndoe@example.com"
+    },
+    {
+      "id": "047d",
+      "name": "John Doe",
+      "email": "johndoe@example.com"
+    },
+    {
+      "id": "ac32",
+      "name": "Sandesh Kapadi",
+      "email": "sandesh@gmail.com"
+    },
+    {
+      "id": "b96d",
+      "name": "John Doessssssssssssss",
+      "email": "johndoe@example.com"
+    },
+    {
+      "id": "62a9",
+      "name": "John Doessssssssssssss",
+      "email": "johndoe@example.com"
+    }
+  ],
+  "user2": [
+    {
+      "id": "ac32",
+      "name": "Nikit ",
+      "email": "nikita@gmail.com"
+    }
+  ]
+}

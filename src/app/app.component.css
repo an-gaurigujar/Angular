@@ -3,12 +3,12 @@ h1 {
 }
 
 nav {
-  background-color: #007bff; /* Blue background */
+  background-color: #007bff; 
   padding: 10px;
   border-radius: 5px;
   display: flex;
-  justify-content: center; /* Centering content horizontally */
-  align-items: center; /* Centering content vertically */
+  justify-content: center;
+  align-items: center; 
 }
 
 nav ul {
@@ -33,7 +33,7 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-  background-color: #00b35a;
+  background-color: #0021b3;
 }
 
 nav ul li a.active {
@@ -42,7 +42,6 @@ nav ul li a.active {
   font-weight: bold;
 }
 
-/* Center the two buttons (if they're outside of the list) */
 nav .center-buttons {
   display: flex;
   justify-content: center;
@@ -61,5 +60,5 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #000cb5;
 }

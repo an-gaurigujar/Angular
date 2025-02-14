@@ -13,10 +13,14 @@ export const routes: Routes = [
         component: EditDataComponent,
     },
     // {
-    //     path: '',
-    //     redirectTo: 'company',
-    //     pathMatch: 'full'
-    // }
+    //     path:'edit',
+    //     component: EditDataComponent
+    // },
+    {
+        path: '',
+        redirectTo: 'company',
+        pathMatch: 'full'
+    },
     {
         path: 'show',
         component: ShowDataComponent,

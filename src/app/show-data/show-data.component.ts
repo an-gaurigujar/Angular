@@ -1,41 +1,80 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-show-data',
-  imports: [ReactiveFormsModule,CommonModule],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './show-data.component.html',
   styleUrl: './show-data.component.css'
 })
-export class ShowDataComponent {
-  data: any=[];
-  constructor(private router: Router) {
-    // this.data = JSON.parse(localStorage.getItem('data'));
-    // console.log(this.data);
-    // this.data.forEach(unit => {
-    //   this.addUnit(unit);
-    // });
-    const data = localStorage.getItem('data');
-    if(data){
-      this.data = JSON.parse(data);
+export class ShowDataComponent implements OnInit {
+  userData: any = [];
+
+  constructor(private router: Router, private services: ApiService) {}
+
+  ngOnInit(): void {
+    this.currentEntity();  
+  }
+currentEntity() {
+    this.services.getCompanies().subscribe(
+      (data: any) => {
+        console.log("API Response:", data);
+        this.userData = this.transformData(data); 
+      },
+      (error) => {
+        console.error("Error fetching data:", error);
+      }
+    );
+  }
+
+  deleteCompany(id: number) {
+    if (confirm("Are you sure you want to delete this company?")) {
+      this.services.deleteCompany(id).subscribe(
+        () => {
+          alert("Company deleted successfully!");  // Optionally alert the user
+          this.currentEntity();  // Refresh the list
+        },
+        (error) => {
+          console.error("Error deleting company:", error);
+        }
+      );
     }
-
-   }
-   editTable(index: number): void {
-    console.log('Edit table at index:', index);
-    this.router.navigateByUrl(`/edit/${index}`)
-
-
   }
-  deleteData(index: number): void {
-    console.log('Delete table at index:', index);
-    this.data.splice(index, 1);
-    localStorage.setItem('data', JSON.stringify(this.data));
+  
+  
+
+  editCompany(id: number) {
+    this.router.navigate(['/edit', id]);
   }
-  clearAll(): void {
-    localStorage.clear();
-    this.data = [];
+  
+  private transformData(data: any) {
+    const companiesMap = new Map();
+
+    data.forEach((row: any) => {
+      if (!companiesMap.has(row.id)) {
+        companiesMap.set(row.id, {
+          id: row.id,
+          company_name: row.company_name,
+          country: row.country,
+          street: row.street,
+          city: row.city,
+          state: row.state,
+          units: row.units,
+        });
+      }
+
+      if (row.unit_name) {
+        companiesMap.get(row.id).units.push({
+          unit_name: row.unit_name,
+          unit_quantity: row.unit_quantity,
+          unit_price: row.unit_price
+        });
+      }
+    });
+
+    return Array.from(companiesMap.values());
   }
 }
