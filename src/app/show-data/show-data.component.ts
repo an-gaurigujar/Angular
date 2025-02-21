@@ -34,8 +34,8 @@ currentEntity() {
     if (confirm("Are you sure you want to delete this company?")) {
       this.services.deleteCompany(id).subscribe(
         () => {
-          alert("Company deleted successfully!");  // Optionally alert the user
-          this.currentEntity();  // Refresh the list
+          alert("Company deleted successfully!");  
+          this.currentEntity(); 
         },
         (error) => {
           console.error("Error deleting company:", error);
@@ -44,8 +44,6 @@ currentEntity() {
     }
   }
   
-  
-
   editCompany(id: number) {
     this.router.navigate(['/edit', id]);
   }
