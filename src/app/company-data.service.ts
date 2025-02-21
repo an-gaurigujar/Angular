@@ -24,5 +24,3 @@ export class CompanyDataService {
     return this.http.put<any>(`http://localhost:3004/user/${id}`,data);
   }
 }
-
-// GET API = http://localhost:3004/user
