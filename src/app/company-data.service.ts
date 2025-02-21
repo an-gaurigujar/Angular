@@ -8,18 +8,6 @@ import { Observable } from 'rxjs';
 export class CompanyDataService { 
 
   constructor(private http: HttpClient) {}
-
-  // addCompanyData(data: any){
-  //   return this.http.post(`https://jsonplaceholder.typicode.com/users`, data);
-  // }
-
-  // getAllData() {
-  //   return this.http.get(`https://jsonplaceholder.typicode.com/users`);
-  // }
-  // postData(data: any){
-  //   return this.http.post(`https://jsonplaceholder.typicode.com/posts`, data);
-  // }
-
   getApi(){
     return this.http.get<any>('http://localhost:3004/user');
   }
