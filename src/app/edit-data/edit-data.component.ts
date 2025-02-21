@@ -63,11 +63,9 @@ export class EditDataComponent implements OnInit  {
         totalPrice:[unit ? unit.unit_quantity * unit.unit_price : 0],
       });
   
-  
       this.units.push(unitGroup);
     }
   
-    
     updateData() {
       if (this.unitForm.valid) {
           this.service.updateCompany(this.id, this.unitForm.value).subscribe({
@@ -90,8 +88,6 @@ export class EditDataComponent implements OnInit  {
       }
   }
   
-  
-  
     resetForm() {
       this.unitForm.reset();
       this.units.clear();
@@ -101,5 +97,4 @@ export class EditDataComponent implements OnInit  {
     removeUnit(index: number) {
       this.units.removeAt(index);
     }
-
 }
