@@ -28,9 +28,6 @@
           <li> {{unit.unit_quantity}} </li>
           <li> {{unit.unit_price}} </li>
         </ul>
-        <!-- <li *ngFor="let unit of data.units">
-          {{ unit.unit_name }} ({{ unit.unit_quantity }} x {{ unit.unit_price }})
-        </li> -->
       </ul>
       <span *ngIf="!data.units || data.units.length === 0">No Units</span>
 
